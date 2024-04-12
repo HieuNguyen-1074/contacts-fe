@@ -1,17 +1,24 @@
 import { useForm } from 'react-hook-form';
 import { validateLoginForm } from '../lib/validation';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FcOk } from 'react-icons/fc';
-import { IoCloseCircleSharp } from 'react-icons/io5';
-import { openToast } from '../lib/toast';
 
+import { openToast } from '../lib/toast';
+import { user_api } from '../api/users';
+import { useAuth } from '../AuthProvider';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { LOGIN, REFRESH_TOKEN_NAME, TOOKENNAME } from '../api/constant';
+import requestApi from '../api/handleResReq';
 function SignPage() {
+  //hook statments
+  const s = useAuth();
+  const nagative = useNavigate();
   const {
     register,
     handleSubmit,
+
     formState: { errors, dirtyFields },
   } = useForm({
-    mode: 'all',
     resolver: yupResolver(validateLoginForm),
   });
 
@@ -27,11 +34,27 @@ function SignPage() {
       placeholder: 'Enter your password',
     },
   ];
-  const handleSubmitEvent = (data) => {
-    openToast({
-      message: 'hello',
-      type: 'warning',
-    });
+
+  // handle event function
+  const handleSubmitEvent = async (data) => {
+    try {
+      const user = await user_api.login(data);
+      if (user.accessTooken) Cookies.set(TOOKENNAME, user.accessToken);
+      if (user.refreshTooken)
+        Cookies.set(REFRESH_TOKEN_NAME, user.refreshTooken);
+      openToast({
+        message: `Hello ${user?.username}`,
+        type: 'success',
+      });
+
+      s.setUser(user);
+      nagative('/', { replace: true });
+    } catch (error) {
+      openToast({
+        message: error.message || `Opp! Something went wrong`,
+        type: 'error',
+      });
+    }
   };
   return (
     <form
@@ -48,7 +71,7 @@ function SignPage() {
               key={input.name}
               {...register(input.name)}
             />
-            {dirtyFields[input.name] && (
+            {/* {dirtyFields[input.name] && (
               <p className='right-center-ab text-[1.5rem] '>
                 {errors[input.name] ? (
                   <IoCloseCircleSharp
@@ -59,7 +82,7 @@ function SignPage() {
                   <FcOk className='mt-[3px]' />
                 )}
               </p>
-            )}
+            )} */}
           </div>
         );
       })}

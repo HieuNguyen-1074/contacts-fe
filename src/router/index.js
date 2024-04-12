@@ -29,7 +29,6 @@ export default function Router() {
       element: <SignPage />,
     },
   ]);
-  console.log(routers);
   return (
     <AuthProvider>
       <RouterProvider router={routers} />
