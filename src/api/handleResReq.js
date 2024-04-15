@@ -1,4 +1,9 @@
-import { REFRESH_TOKEN_NAME, TOOKENNAME } from './constant';
+import {
+  PUBLIC_PATH,
+  REFRESH_TOKEN,
+  REFRESH_TOKEN_NAME,
+  TOOKENNAME,
+} from './constant';
 
 import Cookies from 'js-cookie';
 import { user_api } from './users';
@@ -43,8 +48,11 @@ export default function requestApi(
 const _handleRequestSuccess = (config) => {
   const urlNeedToUseFormData = [];
   const authToken = Cookies.get(TOOKENNAME) ?? '';
+
+  const isPublicPath = PUBLIC_PATH.some((url) => config.url.includes(url));
+
   if (authToken) {
-    config.headers[`Authorization`] = `Bearer ${authToken}`;
+    !isPublicPath && (config.headers[`Authorization`] = `Bearer ${authToken}`);
     config.headers[`Content-Type`] = urlNeedToUseFormData.some((url) =>
       config.url.includes(url)
     )
@@ -76,7 +84,7 @@ async function _handleResponseError(instance, error) {
 
     try {
       const tookens = await user_api.refreshTooken(authTokenRefresh);
-      Cookies.set(TOOKENNAME, tookens.accessToken);
+      Cookies.set(TOOKENNAME, tookens.accessTooken);
       Cookies.set(REFRESH_TOKEN_NAME, tookens.refreshTooken);
       originConfig.headers.set(
         'Authorization',
@@ -85,6 +93,7 @@ async function _handleResponseError(instance, error) {
       return instance(originConfig);
       //
     } catch (error) {
+      console.log(error);
       Cookies.remove(TOOKENNAME);
       Cookies.remove(REFRESH_TOKEN_NAME);
       window.location.href = '/signin';

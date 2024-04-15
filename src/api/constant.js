@@ -6,6 +6,7 @@ export const REQUEST_TYPE = {
   FORM_DATA: 'multipart/form-data',
   JSON: 'application/json',
 };
+
 export const TOOKENNAME = 'CONTACTTK';
 export const REFRESH_TOKEN_NAME = 'REFRESH_CONTACTTK';
 
@@ -13,3 +14,7 @@ export const LOGIN = '/users/login';
 export const REGISTER = '/users/register';
 export const GET_USER = '/users/current';
 export const REFRESH_TOKEN = '/users/refresh-tooken';
+
+export const CONTACTS = '/contacts';
+
+export const PUBLIC_PATH = [LOGIN, REFRESH_TOKEN, REGISTER];

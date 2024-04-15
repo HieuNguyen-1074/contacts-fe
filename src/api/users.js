@@ -1,4 +1,10 @@
-import { GET_USER, LOGIN, REFRESH_TOKEN, REQUEST_TYPE } from './constant';
+import {
+  GET_USER,
+  LOGIN,
+  REFRESH_TOKEN,
+  REGISTER,
+  REQUEST_TYPE,
+} from './constant';
 
 import requestApi from './handleResReq';
 
@@ -11,7 +17,7 @@ const login = (data) => {
   return requestApi(LOGIN, 'POST', data, REQUEST_TYPE.JSON)
     .then((response) => JSON.parse(response.data))
     .catch((error) => {
-      throw new Error(error?.response?.data?.message);
+      throw JSON.parse(error?.response?.data);
     });
 };
 /**
@@ -28,7 +34,7 @@ const refreshTooken = (tooken) => {
   )
     .then((response) => JSON.parse(response.data))
     .catch((error) => {
-      throw new Error(error?.response?.data?.message);
+      throw JSON.parse(error?.response?.data);
     });
 };
 
@@ -40,7 +46,19 @@ const getUser = () => {
   return requestApi(GET_USER, 'GET', null, REQUEST_TYPE.JSON)
     .then((response) => JSON.parse(response.data))
     .catch((error) => {
-      throw new Error(error?.response?.data?.message);
+      throw JSON.parse(error?.response?.data);
+    });
+};
+
+/**
+ * get data user
+ * @returns
+ */
+const signUser = (data) => {
+  return requestApi(REGISTER, 'POST', data, REQUEST_TYPE.JSON)
+    .then((response) => JSON.parse(response.data))
+    .catch((error) => {
+      throw JSON.parse(error?.response?.data);
     });
 };
 
@@ -48,4 +66,5 @@ export const user_api = {
   login,
   getUser,
   refreshTooken,
+  signUser,
 };

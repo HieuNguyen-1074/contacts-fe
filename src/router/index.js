@@ -12,18 +12,11 @@ export default function Router() {
       path: '/',
       element: (
         <ProtectRouter>
-          <p>this is root</p>
-        </ProtectRouter>
-      ),
-    },
-    {
-      path: '/home',
-      element: (
-        <ProtectRouter>
           <HomePage />
         </ProtectRouter>
       ),
     },
+
     {
       path: '/signin',
       element: <SignPage />,
