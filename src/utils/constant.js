@@ -3,3 +3,7 @@ export const TYPE_TOAST = {
   WRANING: 'warning',
   SUCCESS: 'success',
 };
+
+export const MAX_FILE_SIZE = 102400; //100KB
+
+export const validFileExtensions = ['jpg', 'gif', 'png', 'jpeg', 'svg'];

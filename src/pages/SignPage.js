@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { validateLoginForm } from '../lib/validation';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { openToast } from '../lib/toast';
+import { logErrors, openToast } from '../lib/toast';
 import { user_api } from '../api/users';
 import { useAuth } from '../AuthProvider';
 import { useNavigate } from 'react-router-dom';
@@ -66,27 +66,22 @@ function SignPage() {
     defaultValues: {
       isSignin,
     },
+    context: {
+      isSignin,
+    },
   });
 
   const nagative = useNavigate();
 
-  watch('password', () => {
-    console.log('first');
-    reset('re-password');
-  });
   //effects
   useEffect(() => {
-    for (const key in errors) {
-      if (Object.hasOwnProperty.call(errors, key)) {
-        const error = errors[key];
-        if (error) openToast(error);
-      }
-    }
+    logErrors(errors);
   }, [errors]);
   //
   useEffect(() => {
     const isSigninFormEnabled = JSON.parse(localStorage.getItem('isSignin'));
     setIsSign(isSigninFormEnabled);
+    setValue('isSignin', isSigninFormEnabled);
   }, []);
   //
   useEffect(() => {
@@ -150,20 +145,27 @@ function SignPage() {
   };
   return (
     <form
-      className=' center-center-ab w-[400px] h-[400px]'
+      className='form-sign-login center-center-ab w-[400px] h-[400px] flex flex-col gap-3'
       onSubmit={handleSubmit(handleSubmitEvent)}>
-      {inputs.map((input) => {
+      {inputs.map(({ name, type, placeholder, isInputSign }) => {
         return (
           <div
-            className='relative'
-            key={input.name}>
+            className={`relative ${
+              !isSignin && isInputSign
+                ? 'h-[0px] p-0 border-none opacity-0 pointer-events-none'
+                : 'h-auto  opacity-1'
+            } transition-all`}
+            key={name}>
             <input
               className={` ${
-                !isSignin && input.isInputSign ? 'hidden' : ''
-              } w-full  p-2 border-[3px] border-black rounded-lg mt-7 outline-none text-[1.5rem]`}
-              {...input}
-              key={input.name}
-              {...register(input.name)}
+                !isSignin && isInputSign
+                  ? 'h-[0px] p-0 border-none '
+                  : 'h-auto  '
+              } w-full  outline-none p-3 rounded-lg border-[3px] transition-all`}
+              placeholder={placeholder}
+              type={type}
+              key={name}
+              {...register(name)}
             />
             {/* {
               <p className='right-center-ab text-[1.5rem] '>

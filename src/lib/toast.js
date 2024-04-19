@@ -45,5 +45,17 @@ function openToast({ message, type }) {
     message: message,
   });
 }
+/**
+ *
+ * @param {*} errors it must be an array of errors that belong react-hook-form
+ */
+function logErrors(errors) {
+  for (const key in errors) {
+    if (Object.hasOwnProperty.call(errors, key)) {
+      const error = errors[key];
+      if (error) openToast(error);
+    }
+  }
+}
 
-export { openToast };
+export { openToast, logErrors };

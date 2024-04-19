@@ -6,6 +6,6 @@ export function useGetContacts() {
     queryKey: ['get-contacts'],
     queryFn: api_contacts.getContacts,
   });
-  console.log(isPending, isError, data, error);
+
   return { isPending, isError, data, error };
 }

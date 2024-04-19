@@ -9,7 +9,27 @@
   .right-center-ab{
     @apply absolute top-1/2 right-1 -translate-x-1/2 ;
   }
+  .right-top-ab{
+    @apply absolute top-0 right-1 ;
+  }
   .input{
     @apply p-2 border-[3px] border-[black] rounded-lg mt-7 outline-none text-[1.5rem]
   }
+  .ani-scaleAndBack{
+    
+    animation-name: scaleAndBack;
+    animation-duration: 0.3s;
+    transform-origin: center;
+  
+  }
+}
+
+@keyframes scaleAndBack {
+  0%   {
+   transform:  scale(0.9)
+ 
+ }
+  50%  {transform:  scale(1.1);}
+
+  100% {transform:  scale(1)}
 }

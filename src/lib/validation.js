@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { MAX_FILE_SIZE, validFileExtensions } from '../utils/constant';
 
 const validateLoginForm = yup.object().shape({
   email: yup.string().email('Invalid email').required('Email is required'),
@@ -26,7 +27,7 @@ const validateLoginForm = yup.object().shape({
               .oneOf([yup.ref('password'), null], "Password dosen't match"),
         }),
   }),
-  isSignin: yup.boolean(),
+
   username: yup.string().when('isSignin', {
     is: true,
     then: () =>
@@ -38,4 +39,55 @@ const validateLoginForm = yup.object().shape({
   }),
 });
 
-export { validateLoginForm };
+const validateImage = yup.object().shape({
+  image: yup
+    .mixed()
+
+    .test('fileSize', 'The file is too large', (value) => {
+      console.log(value);
+      return value && value.size <= MAX_FILE_SIZE;
+    })
+    .test(
+      'type',
+      'Only the following formats are accepted: .jpeg, .jpg, .bmp, .pdf and .doc',
+      (value) => {
+        return value && validFileExtensions.includes(value.type.split('/')[1]);
+      }
+    ),
+});
+
+const validateContactForm = yup.object().shape({
+  email: yup.string().email('Invalid email').required('Email is required'),
+  phone: yup.string().required('Phone number is required'),
+
+  name: yup.string().required('Name is required'),
+  avatar: yup
+    .mixed()
+    .required('You need to provide a file')
+    .test('fileSize', 'The file is too large', (value) => {
+      return value && value[0].size <= MAX_FILE_SIZE;
+    })
+    .test(
+      'type',
+      'Only the following formats are accepted: .jpeg, .jpg, .bmp, .pdf and .doc',
+      (value) => {
+        return (
+          value && validFileExtensions.includes(value[0].type.split('/')[1])
+        );
+      }
+    ),
+});
+/**
+ *
+ * @param {*} fileName
+ * @param {*} fileType
+ * @returns
+ */
+function isValidFileType(fileName, fileType) {
+  return (
+    fileName &&
+    validFileExtensions[fileType].indexOf(fileName.split('.').pop()) > -1
+  );
+}
+
+export { validateLoginForm, validateContactForm, validateImage };

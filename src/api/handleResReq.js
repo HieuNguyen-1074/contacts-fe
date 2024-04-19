@@ -46,19 +46,14 @@ export default function requestApi(
 }
 // handle request from client
 const _handleRequestSuccess = (config) => {
-  const urlNeedToUseFormData = [];
   const authToken = Cookies.get(TOOKENNAME) ?? '';
 
   const isPublicPath = PUBLIC_PATH.some((url) => config.url.includes(url));
 
   if (authToken) {
     !isPublicPath && (config.headers[`Authorization`] = `Bearer ${authToken}`);
-    config.headers[`Content-Type`] = urlNeedToUseFormData.some((url) =>
-      config.url.includes(url)
-    )
-      ? 'multipart/form-data'
-      : 'application/json';
   }
+  console.log(config);
   return config;
 };
 
