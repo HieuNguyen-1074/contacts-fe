@@ -12,6 +12,8 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query';
 import LoadingProvider from './lib/loading';
+import ContactsProvider from './context/contacts';
+import AuthProvider from './AuthProvider';
 
 const queryClient = new QueryClient();
 
@@ -20,7 +22,11 @@ root.render(
   <React.StrictMode>
     <LoadingProvider>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <AuthProvider>
+          <ContactsProvider>
+            <App />
+          </ContactsProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </LoadingProvider>
   </React.StrictMode>

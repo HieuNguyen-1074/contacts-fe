@@ -6,13 +6,15 @@ import { FaRegWindowClose } from 'react-icons/fa';
 import { BsImage } from 'react-icons/bs';
 import { FaPlus } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
+import { CiSquarePlus } from 'react-icons/ci';
+import { RxUpdate } from 'react-icons/rx';
 
 import { logErrors, openToast } from '../lib/toast';
 import { api_contacts } from '../api/contacts';
 import { validateContactForm, validateImage } from '../lib/validation';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useGetContacts } from '../hooks/react-query/getContacts';
 import { useLoading } from '../lib/loading';
+import { useContacts } from '../context/contacts';
 
 //local constants
 const inputs = {
@@ -48,7 +50,7 @@ const inputs = {
 
 export default function ContactForm({ isOpenForm, handleClose, dataForm }) {
   //state
-  const { refetch } = useGetContacts();
+  const { refetch } = useContacts();
 
   // store base64/image url for display avatar image in screen
   const [avatarImage, setAvatarImage] = useState(null);
@@ -177,15 +179,27 @@ export default function ContactForm({ isOpenForm, handleClose, dataForm }) {
               register={register}
               onChangeAvatar={onChangeAvatar}
               avatarImage={avatarImage}
-              setAvatarImage={setAvatarImage}
+              setAvatarImage={() => {
+                setValue('avatar', null);
+                setAvatarImage(null);
+              }}
             />
           </div>
         </div>
-        <input
+        <button
           type='submit'
-          className='bg-main mt-4 text-white p-3 rounded-lg text-[1.5rem] cursor-pointer'
-          value={'Create'}
-        />
+          className={` ${
+            dataForm?._id && 'border-[3px] rounded-lg'
+          } w-fit mx-auto mt-4 hover:scale-75 transition-all`}>
+          {dataForm?._id ? (
+            <RxUpdate
+              className='hover:rotate-180 transition-all'
+              size={40}
+            />
+          ) : (
+            <CiSquarePlus size={55} />
+          )}
+        </button>
       </form>
     </div>
   );
@@ -221,7 +235,7 @@ function AvatarInput({
           return (
             <div key={input.name}>
               <label>
-                <div className='relative group'>
+                <div className='relative group cursor-pointer'>
                   <BsImage className='group-hover:text-[3rem] text-[4rem] center-center-ab group-hover:opacity-20 transition-all' />
                   <FaPlus className='center-center-ab bg-[rgba(#ffff)]  opacity-0  group-hover:opacity-100 group-hover:text-[4rem]' />
                 </div>

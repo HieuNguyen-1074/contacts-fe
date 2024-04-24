@@ -2,7 +2,6 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from '../pages/HomePage';
 import SignPage from '../pages/SignPage';
-import AuthProvider from '../AuthProvider';
 import ProtectRouter from './ProtectRouter';
 
 export default function Router() {
@@ -22,9 +21,5 @@ export default function Router() {
       element: <SignPage />,
     },
   ]);
-  return (
-    <AuthProvider>
-      <RouterProvider router={routers} />
-    </AuthProvider>
-  );
+  return <RouterProvider router={routers} />;
 }

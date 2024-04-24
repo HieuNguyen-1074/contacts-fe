@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { api_contacts } from '../api/contacts';
-import { useGetContacts } from '../hooks/react-query/getContacts';
+
 import { useLoading } from '../lib/loading';
 import { openToast } from '../lib/toast';
+
+import { FaDeleteLeft } from 'react-icons/fa6';
+import { MdOutlineUpdate } from 'react-icons/md';
+import { useContacts } from '../context/contacts';
 
 export default function ContactCard({
   name,
@@ -13,7 +17,7 @@ export default function ContactCard({
   handleOpenForm,
 }) {
   //state
-  const { refetch } = useGetContacts();
+  const { refetch } = useContacts();
   const { setIsLoading } = useLoading();
   // handle event
   const handleDelete = async () => {
@@ -31,25 +35,28 @@ export default function ContactCard({
     }
   };
   return (
-    <div>
-      <div className='group relative '>
-        <div className='group-hover:opacity-100 opacity-0 absolute center-center-ab'>
+    <div className=' flex flex-col  gap-3  lg:h-[200px] border-[2px] rounded-lg  p-3 '>
+      <div className='group relative flex justify-center '>
+        <div className=' group-hover:opacity-100 opacity-0 absolute center-center-ab flex justify-center gap-3'>
           <button
             onClick={() => handleOpenForm({ name, email, phone, avatar, _id })}>
-            Edit
+            <MdOutlineUpdate size={30} />
           </button>
-          <button onClick={handleDelete}>delete</button>
+          <button onClick={handleDelete}>
+            <FaDeleteLeft size={30} />
+          </button>
         </div>
         <img
-          className='w-full h-full group-hover:bg-[rgba(0,0,0,.4)]'
+          className='group-hover:bg-[rgba(0,0,0,.4)] lg:h-[80px] '
           src={avatar}
           alt=''
         />
       </div>
-
-      <p>{name}</p>
-      <p>{email}</p>
-      <p>{phone}</p>
+      <div className='w-full '>
+        <p>{name}</p>
+        <p>{email}</p>
+        <p>{phone}</p>
+      </div>
     </div>
   );
 }

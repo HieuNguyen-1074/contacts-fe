@@ -73,7 +73,9 @@ async function _handleResponseError(instance, error) {
     if (!authTokenRefresh) {
       Cookies.remove(TOOKENNAME);
       Cookies.remove(REFRESH_TOKEN_NAME);
-      window.location.href = '/signin';
+      console.log(window.location);
+      window.location.pathname !== '/signin' &&
+        (window.location.href = '/signin');
       return;
     }
 
@@ -91,7 +93,9 @@ async function _handleResponseError(instance, error) {
       console.log(error);
       Cookies.remove(TOOKENNAME);
       Cookies.remove(REFRESH_TOKEN_NAME);
-      window.location.href = '/signin';
+      console.log(window.location);
+      window.location.pathname !== '/signin' &&
+        (window.location.href = '/signin');
     }
   } else {
     return Promise.reject(error);

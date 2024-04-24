@@ -1,38 +1,14 @@
-import React, { useState, useCallback } from 'react';
-import { useGetContacts } from '../hooks/react-query/getContacts';
+import React, { useState, useCallback, Suspense } from 'react';
 import ContactForm from '../components/ContactForm';
 import ContactCard from '../components/ContactCard';
 
+import { CiSquarePlus } from 'react-icons/ci';
+import { Pagination } from '@ngochuytu/react-pagination';
+import { useContacts } from '../context/contacts';
+
 export default function HomePage() {
   //state
-  const { data } = useGetContacts();
-  const total = 100;
-
-  const getPaginationUI = (total) => {
-    let jsxPagination = [];
-    let jsxPaginationPrev = [];
-    let jsxPaginationNext = [];
-
-    for (let i = 1; i <= (total < 3 ? total : 3); i++) {
-      jsxPaginationPrev.push(<button>{i}</button>);
-    }
-    if (total > 3) {
-      for (
-        let i = total;
-        i > (total > 6 ? total - 3 : total - (5 - total));
-        i--
-      ) {
-        jsxPaginationNext.push(<button>{i}</button>);
-      }
-    }
-
-    jsxPaginationNext.reverse();
-    jsxPagination = [...jsxPagination, ...jsxPaginationPrev];
-    jsxPaginationNext.length > 0 && jsxPagination.push(<>....</>);
-    jsxPaginationNext.length > 0 &&
-      (jsxPagination = [...jsxPagination, ...jsxPaginationNext]);
-    return jsxPagination;
-  };
+  const { data, itemPerPage, setPage } = useContacts();
 
   const [dataForm, setDataForm] = useState();
 
@@ -48,28 +24,51 @@ export default function HomePage() {
     setIsOpenForm(true);
   }, []);
 
+  const onPageChange = (activePage) => {
+    setPage(activePage);
+  };
   return (
-    <div>
-      {getPaginationUI(10)}
-      <button onClick={() => handleOpen()}>click here</button>
-      <div className='flex  '>
-        {data &&
-          data.map((contact) => {
-            return (
-              <ContactCard
-                key={contact?._id}
-                {...contact}
-                handleOpenForm={handleOpen}
+    <Suspense fallback={<p>loading</p>}>
+      <div className='h-full'>
+        <div className='h-full flex sm:justify-start md:justify-center flex-col  w-[100vw] max-w-[1000px] md:px-4 sm:px-6 mx-auto px-20  md:mt-0 mt-20'>
+          <div className='flex w-full justify-between '>
+            <div className='flex justify-between w-full '>
+              <Pagination
+                totalPages={Math.ceil(data?.totalRecords / itemPerPage)}
+                activePage={1}
+                breakButtonStep={2}
+                pageRange={6}
+                onPageChange={onPageChange}
+                navigateToFirstPageButtonLabel='&#171;'
+                navigateToLastPageButtonLabel='&#187;'
               />
-            );
-          })}
+              <button
+                className='mr-[-5px]'
+                onClick={() => handleOpen()}>
+                <CiSquarePlus size={35} />
+              </button>
+            </div>
+          </div>
 
+          <div className='grid lg:grid-cols-5 md:grid-cols-4  sm:grid-cols-3   gap-2 flex-wrap mt-10 '>
+            {data &&
+              data?.list?.map((contact) => {
+                return (
+                  <ContactCard
+                    key={contact?._id}
+                    {...contact}
+                    handleOpenForm={handleOpen}
+                  />
+                );
+              })}
+          </div>
+        </div>
         <ContactForm
           isOpenForm={isOpenForm}
           handleClose={handleClose}
           dataForm={dataForm}
         />
       </div>
-    </div>
+    </Suspense>
   );
 }
