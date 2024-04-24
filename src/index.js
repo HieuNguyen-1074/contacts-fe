@@ -11,15 +11,18 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
+import LoadingProvider from './lib/loading';
 
 const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
+    <LoadingProvider>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </LoadingProvider>
   </React.StrictMode>
 );
 

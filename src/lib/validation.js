@@ -42,16 +42,19 @@ const validateLoginForm = yup.object().shape({
 const validateImage = yup.object().shape({
   image: yup
     .mixed()
-
+    .required('You need to provide a file')
     .test('fileSize', 'The file is too large', (value) => {
-      console.log(value);
-      return value && value.size <= MAX_FILE_SIZE;
+      if (value && typeof value === 'string') return true;
+      return value && value?.size <= MAX_FILE_SIZE;
     })
     .test(
       'type',
       'Only the following formats are accepted: .jpeg, .jpg, .bmp, .pdf and .doc',
       (value) => {
-        return value && validFileExtensions.includes(value.type.split('/')[1]);
+        if (value && typeof value === 'string') return true;
+        return (
+          value && validFileExtensions.includes(value?.type?.split('/')[1])
+        );
       }
     ),
 });
@@ -63,16 +66,28 @@ const validateContactForm = yup.object().shape({
   name: yup.string().required('Name is required'),
   avatar: yup
     .mixed()
-    .required('You need to provide a file')
+    .test('requireFile', 'You need to provide a file', (value) => {
+      if (value && typeof value === 'string') return !!value;
+      if (!value?.length) {
+        return;
+      }
+      return true;
+    })
     .test('fileSize', 'The file is too large', (value) => {
-      return value && value[0].size <= MAX_FILE_SIZE;
+      if (value && typeof value === 'string') return true;
+      if (value?.length) {
+        return value && value[0].size <= MAX_FILE_SIZE;
+      }
+
+      return;
     })
     .test(
       'type',
       'Only the following formats are accepted: .jpeg, .jpg, .bmp, .pdf and .doc',
       (value) => {
+        if (value && typeof value === 'string') return true;
         return (
-          value && validFileExtensions.includes(value[0].type.split('/')[1])
+          value && validFileExtensions.includes(value[0]?.type?.split('/')[1])
         );
       }
     ),

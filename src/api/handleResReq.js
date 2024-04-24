@@ -40,7 +40,7 @@ export default function requestApi(
   return instance.request({
     method: method,
     url: `${process.env.REACT_APP_API_URL}${endpoint}`,
-    data: body,
+    data: body ? body : undefined,
     responseType: responseType,
   });
 }
