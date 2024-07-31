@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { FaHandPointRight } from 'react-icons/fa';
 import { FcOk } from 'react-icons/fc';
 import { IoCloseCircleSharp } from 'react-icons/io5';
+import Run from '../components/Run';
 
 //local constants
 const inputs = [
@@ -144,30 +145,32 @@ function SignPage() {
     setIsSign(!isSignin);
   };
   return (
-    <form
-      className='form-sign-login center-center-ab w-[400px] h-[400px] flex flex-col gap-3'
-      onSubmit={handleSubmit(handleSubmitEvent)}>
-      {inputs.map(({ name, type, placeholder, isInputSign }) => {
-        return (
-          <div
-            className={`relative ${
-              !isSignin && isInputSign
-                ? 'h-[0px] p-0 border-none opacity-0 pointer-events-none'
-                : 'h-auto  opacity-1'
-            } transition-all`}
-            key={name}>
-            <input
-              className={` ${
+    <>
+      <Run />
+      <form
+        className='form-sign-login center-center-ab w-[400px] h-[400px] flex flex-col gap-3'
+        onSubmit={handleSubmit(handleSubmitEvent)}>
+        {inputs.map(({ name, type, placeholder, isInputSign }) => {
+          return (
+            <div
+              className={`relative ${
                 !isSignin && isInputSign
-                  ? 'h-[0px] p-0 border-none '
-                  : 'h-auto  '
-              } w-full  outline-none p-3 rounded-lg border-[3px] transition-all`}
-              placeholder={placeholder}
-              type={type}
-              key={name}
-              {...register(name)}
-            />
-            {/* {
+                  ? 'h-[0px] p-0 border-none opacity-0 pointer-events-none'
+                  : 'h-auto  opacity-1'
+              } transition-all`}
+              key={name}>
+              <input
+                className={` ${
+                  !isSignin && isInputSign
+                    ? 'h-[0px] p-0 border-none '
+                    : 'h-auto  '
+                } w-full  outline-none p-3 rounded-lg border-[3px] transition-all`}
+                placeholder={placeholder}
+                type={type}
+                key={name}
+                {...register(name)}
+              />
+              {/* {
               <p className='right-center-ab text-[1.5rem] '>
                 {isSignin &&
                   dirtyFields[input.name] &&
@@ -181,27 +184,28 @@ function SignPage() {
                   ))}
               </p>
             } */}
-          </div>
-        );
-      })}
+            </div>
+          );
+        })}
 
-      <input
-        type='submit'
-        value={isSignin ? 'Sign' : 'Login'}
-        className='bg-white hover:bg-main text-black hover:text-white text-[1.5rem] font-bold w-full p-2 border-[3px] border-[black]  rounded-lg mt-9'
-      />
-      <div
-        className='flex items-center gap-3 mt-5 w-fit'
-        onClick={switchForm}>
-        <p>{isSignin ? 'Wanna login?' : 'Need a account?'}</p>
-        <div className='flex items-center group gap-2'>
-          <FaHandPointRight className='group-hover:text-main cursor-pointer scale-150 group-hover:scale-100 group-hover:underline inline-block transition-all' />
-          <span className='group-hover:text-main cursor-pointer group-hover:scale-110 group-hover:underline inline-block transition-all'>
-            There
-          </span>
+        <input
+          type='submit'
+          value={isSignin ? 'Sign' : 'Login'}
+          className='bg-white hover:bg-main text-black hover:text-white text-[1.5rem] font-bold w-full p-2 border-[3px] border-[black]  rounded-lg mt-9'
+        />
+        <div
+          className='flex items-center gap-3 mt-5 w-fit'
+          onClick={switchForm}>
+          <p>{isSignin ? 'Wanna login?' : 'Need a account?'}</p>
+          <div className='flex items-center group gap-2'>
+            <FaHandPointRight className='group-hover:text-main cursor-pointer scale-150 group-hover:scale-100 group-hover:underline inline-block transition-all' />
+            <span className='group-hover:text-main cursor-pointer group-hover:scale-110 group-hover:underline inline-block transition-all'>
+              There
+            </span>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </>
   );
 }
 

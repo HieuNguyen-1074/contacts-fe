@@ -36,7 +36,7 @@ export default function ContactCard({
   };
   return (
     <div className=' flex flex-col  gap-3  lg:h-[200px] border-[2px] rounded-lg  p-3 '>
-      <div className='group relative flex justify-center '>
+      <div className='group relative flex justify-center h-[60%] '>
         <div className=' group-hover:opacity-100 opacity-0 absolute center-center-ab flex justify-center gap-3'>
           <button
             onClick={() => handleOpenForm({ name, email, phone, avatar, _id })}>
